@@ -5,7 +5,7 @@ import { ACTIVE_STATUSES_FILTER, ORDER_SELECT, getOrder } from '@/server/data';
 import { orderDoc, publicOrder } from '@/server/mappers';
 import { priceItems } from '@/server/orders';
 import { rateLimit } from '@/server/rateLimit';
-import { broadcast, orderMessages, staffMessage } from '@/server/realtime';
+import { broadcast, orderMessages, staffMessage, staffTopic } from '@/server/realtime';
 import { toPositiveInt } from '@/server/validate';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -65,6 +65,13 @@ export const POST = route(async (req) => {
     throw new ApiError(403, 'Kitchen accounts cannot place orders');
   }
 
+  if (ctx.kind === 'customer' && ctx.visitEndedAt) {
+    throw new ApiError(403, 'Your visit has ended. Please scan the QR code on your table to order again.', 'VISIT_ENDED');
+  }
+  if (ctx.kind === 'customer' && !(ctx.tableNumber > 0)) {
+    throw new ApiError(403, 'Please give your order to our captain.');
+  }
+
   const restaurantId = ctx.restaurantId;
   const isTakeaway = ctx.kind === 'staff' && body.orderType === 'takeaway';
 
@@ -114,11 +121,24 @@ export const POST = route(async (req) => {
       takeaway_token: isTakeaway ? String(body.takeawayToken || '').slice(0, 20) : '',
       waiter_id: ctx.kind === 'staff' ? ctx.user.id : null,
       waiter_name: ctx.kind === 'staff' ? ctx.user.name : `Self QR (${customerName})`,
+      // A guest's order on a free table waits for a waiter to accept it (stops orders from
+      // a photographed QR code). Food added to an open order is not held.
+      needs_approval: ctx.kind === 'customer',
       items,
     },
   });
 
   const order = (await getOrder(result.order_id, restaurantId))!;
+
+  // Waiting for a waiter: staff get an Accept / Reject alert, the kitchen gets nothing yet
+  if (order.status === 'awaiting') {
+    await broadcast([
+      staffMessage(restaurantId, 'order-awaiting', order),
+      ...orderMessages(result.created ? 'order-created' : 'order-updated', order).filter(m => m.topic !== staffTopic(restaurantId)),
+      staffMessage(restaurantId, 'table-updated'),
+    ]);
+    return json(publicOrder(order), result.created ? 201 : 200);
+  }
 
   if (!result.created) {
     await broadcast([...orderMessages('order-updated', order), staffMessage(restaurantId, 'table-updated')]);

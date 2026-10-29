@@ -3,6 +3,7 @@
 import React from 'react';
 import Sidebar from '../../components/shared/Sidebar';
 import { SocketProvider } from '../../context/SocketContext';
+import OrderApprovals from '../../components/shared/OrderApprovals';
 import { useAuth } from '../../context/AuthContext';
 
 // The pages themselves are Next.js routes under src/app/waiter/*
@@ -16,6 +17,7 @@ export default function WaiterLayout({ children }) {
           {children}
         </div>
       </div>
+      <OrderApprovals />
     </SocketProvider>
   );
 }

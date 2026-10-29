@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useCustomer } from './CustomerContext';
 
 export default function FoodDetailModal({ item, onClose }) {
-  const { addToCart, isCounter } = useCustomer();
+  const { addToCart, isCounter, viewOnly } = useCustomer();
   const [quantity, setQuantity] = useState(1);
   const [dishNote, setDishNote] = useState('');
 
@@ -104,9 +104,9 @@ export default function FoodDetailModal({ item, onClose }) {
           {item.description || 'Deliciously prepared with authentic ingredients and freshly served hot to your table.'}
         </p>
 
-        {isCounter ? (
+        {viewOnly ? (
           <div style={{ background: '#FFF8E6', border: '1px solid #F6D78B', color: '#92400E', borderRadius: 12, padding: '10px 12px', fontSize: '0.85rem', fontWeight: 700, textAlign: 'center' }}>
-            🧑‍🍳 Please give your order to our captain.
+            {isCounter ? '🧑‍🍳 Please give your order to our captain.' : '☕ Scan the QR code on your table to order.'}
           </div>
         ) : (
         <>

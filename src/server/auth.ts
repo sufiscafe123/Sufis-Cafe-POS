@@ -21,8 +21,29 @@ export type CustomerContext = {
   customerId: string;
   restaurantId: string;
   restaurant: RestaurantRow;
+  // 0 at the counter, and once the guest's visit has ended (their table was billed)
   tableNumber: number;
+  // Set when the table was billed after this guest checked in: menu and rewards only
+  visitEndedAt?: string;
 };
+
+// After the bill, guests keep menu and rewards for this long, then they are logged out.
+export const VISIT_GRACE_MS = 2 * 60 * 60 * 1000;
+
+// The first bill of this guest's table generated after they checked in, for an order they took
+// part in. Bills of another group at the same table don't end this guest's visit.
+async function visitEndedAt(customerId: string, restaurantId: string, tableNumber: number, checkedInAt: number) {
+  if (!(tableNumber > 0)) return null;
+  const { data: bills } = await db().from('bills').select('order_id, created_at')
+    .eq('restaurant_id', restaurantId).eq('table_number', tableNumber)
+    .gt('created_at', new Date(checkedInAt * 1000).toISOString())
+    .order('created_at', { ascending: true }).limit(10);
+  if (!bills?.length) return null;
+  const { data: mine } = await db().from('customer_orders').select('order_id')
+    .eq('customer_id', customerId).in('order_id', bills.map(b => b.order_id));
+  const linked = new Set((mine || []).map(r => r.order_id));
+  return bills.find(b => linked.has(b.order_id))?.created_at ?? null;
+}
 
 type StaffLookup =
   | { ok: true; ctx: StaffContext }
@@ -117,12 +138,17 @@ export async function resolveCustomerToken(token: string | null): Promise<Custom
     if (!restaurant || !restaurant.active) {
       throw new ApiError(403, 'This restaurant is not accepting orders right now.');
     }
+    const tableNumber = Number(payload.table);
+    const endedAt = await visitEndedAt(payload.cid, payload.rid, tableNumber, Number(payload.iat));
+    // Two hours after the bill the session is over: the guest checks in again from a QR code
+    if (endedAt && Date.now() > new Date(endedAt).getTime() + VISIT_GRACE_MS) return null;
     return {
       kind: 'customer',
       customerId: payload.cid,
       restaurantId: payload.rid,
       restaurant: restaurant as RestaurantRow,
-      tableNumber: Number(payload.table),
+      tableNumber: endedAt ? 0 : tableNumber,
+      ...(endedAt ? { visitEndedAt: endedAt } : {}),
     };
   } catch (err) {
     if (err instanceof ApiError) throw err;

@@ -16,7 +16,7 @@ const PAYMENT_OPTIONS = [
 // "completed" is not in the manual flow: an order is completed only by generating its bill
 const STATUS_FLOW = ['pending', 'accepted', 'preparing', 'ready', 'served'];
 const STATUS_COLORS = {
-  pending: 'badge-orange', accepted: 'badge-blue', preparing: 'badge-purple',
+  awaiting: 'badge-red', pending: 'badge-orange', accepted: 'badge-blue', preparing: 'badge-purple',
   ready: 'badge-green', served: 'badge-green', completed: 'badge-gray', cancelled: 'badge-red'
 };
 

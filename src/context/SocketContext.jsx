@@ -10,7 +10,7 @@ const SocketContext = createContext();
 const PAYMENT_LABELS = { cash: '💵 Cash', upi: '📱 UPI', card: '💳 Card' };
 
 // Short two-tone chime so a waiter notices a bill request even when not looking at the screen.
-function playChime() {
+export function playChime() {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     [880, 1175].forEach((freq, i) => {

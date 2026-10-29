@@ -9,7 +9,7 @@ import { ChevronRight, Gift, LogOut, X } from 'lucide-react';
 
 const CustomerProfile = () => {
   const navigate = useNavigate();
-  const { customer, tableNumber, isCounter, logoutCustomer, loyaltySettings } = useCustomer();
+  const { customer, tableNumber, isCounter, visitEnded, logoutCustomer, loyaltySettings } = useCustomer();
   const [selectedPastOrder, setSelectedPastOrder] = useState(null);
   const [orderHistory, setOrderHistory] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
@@ -52,7 +52,7 @@ const CustomerProfile = () => {
         <h3 className="st-serif-title" style={{ fontSize: 28 }}>{customer?.name || 'Guest'}</h3>
         <div className="st-muted" style={{ fontSize: 14 }}>+91 {customer?.phone}</div>
         <div className="st-pill" style={{ marginTop: 12 }}>
-          {isCounter ? 'Checked in at the counter' : `Seated at Table No. ${tableNumber}`}
+          {isCounter ? 'Checked in at the counter' : visitEnded ? 'Thank you for visiting!' : `Seated at T-${tableNumber}`}
         </div>
       </div>
 

@@ -3,6 +3,7 @@
 import React from 'react';
 import Sidebar from '../../components/shared/Sidebar';
 import { SocketProvider } from '../../context/SocketContext';
+import OrderApprovals from '../../components/shared/OrderApprovals';
 
 // The pages themselves are Next.js routes under src/app/admin/*
 export default function AdminLayout({ children }) {
@@ -14,6 +15,7 @@ export default function AdminLayout({ children }) {
           {children}
         </div>
       </div>
+      <OrderApprovals />
     </SocketProvider>
   );
 }

@@ -111,6 +111,8 @@ export function CustomerProvider({ children }) {
   const [socket, setSocket] = useState(null);
   const [restaurantInfo, setRestaurantInfo] = useState({ name: '', gstRate: 5 });
   const [loyaltySettings, setLoyaltySettings] = useState({ stampsPerCard: 8, milestones: [] });
+  // After the table is billed: menu and rewards only, logged out at logoutAt
+  const [visit, setVisit] = useState({ visitEnded: false, logoutAt: null });
   const tokenRef = useRef(token);
   tokenRef.current = token;
   // Set during render so child screens' first requests (their effects run before ours) carry it
@@ -126,11 +128,46 @@ export function CustomerProvider({ children }) {
     setActiveOrders([]);
     localStorage.removeItem(STORAGE.profile);
     localStorage.removeItem(STORAGE.token);
+    setVisit({ visitEnded: false, logoutAt: null });
   }, []);
+
+  // End of the visit: forget the table's QR key too, so ordering again needs the QR on the table
+  const endVisit = useCallback(() => {
+    localStorage.removeItem(STORAGE.tableKey);
+    setTableKey(null);
+    setCart([]);
+    logoutCustomer();
+    toast('Thank you for visiting Sufi’s Cafe! Scan the QR code on your table to order again.', { id: 'visit-ended', duration: 8000, icon: '☕' });
+  }, [logoutCustomer]);
+
+  const refreshVisit = useCallback(async () => {
+    if (!tokenRef.current) return;
+    try {
+      const res = await axios.get('/api/customers/me/visit');
+      setVisit({ visitEnded: Boolean(res.data?.visitEnded), logoutAt: res.data?.logoutAt || null });
+      if (res.data?.visitEnded) setCart([]);
+    } catch {
+      // a 401 here (visit over) logs the guest out through the interceptor
+    }
+  }, []);
+
+  useEffect(() => { refreshVisit(); }, [token, refreshVisit]);
+
+  // Log out at the end of the 2 hours after the bill
+  useEffect(() => {
+    if (!visit.logoutAt) return;
+    const ms = new Date(visit.logoutAt).getTime() - Date.now();
+    if (ms <= 0) { endVisit(); return; }
+    const t = setTimeout(endVisit, Math.min(ms, 2 ** 31 - 1));
+    return () => clearTimeout(t);
+  }, [visit.logoutAt, endVisit]);
 
   useEffect(() => {
     session.token = tokenRef.current;
     session.onExpired = () => {
+      // Expired (or 2 hours after the bill): ordering again needs the QR code on the table
+      localStorage.removeItem(STORAGE.tableKey);
+      setTableKey(null);
       logoutCustomer();
       toast.error('Your table session expired. Please check in again.', { id: 'customer-session' });
     };
@@ -236,6 +273,7 @@ export function CustomerProvider({ children }) {
         setActiveOrder(prev => (prev?._id === order._id ? null : prev));
         if (order.status === 'completed') {
           toast.success('🧾 Your bill has been settled. Thank you for dining with us!', { duration: 6000, id: 'bill-settled' });
+          refreshVisit();
         }
         return;
       }
@@ -248,7 +286,9 @@ export function CustomerProvider({ children }) {
 
     const onStatus = (order) => {
       onOrderChange(order);
-      if (order.status === 'ready') toast.success('🔔 Your food is ready!', { duration: 5000 });
+      if (order.status === 'pending') toast.success('✅ Order accepted! The kitchen will start preparing it.', { duration: 6000, id: `accepted-${order._id}` });
+      else if (order.status === 'cancelled') toast.error('Your order was not accepted. Please ask our staff for help.', { duration: 8000, id: `rejected-${order._id}` });
+      else if (order.status === 'ready') toast.success('🔔 Your food is ready!', { duration: 5000 });
       else if (order.status === 'preparing') toast('🍳 The kitchen is now preparing your food', { icon: '👨‍🍳' });
       else if (order.status === 'served') toast.success('🍽️ Food served! Enjoy your meal.');
     };
@@ -283,6 +323,7 @@ export function CustomerProvider({ children }) {
       if (document.visibilityState === 'visible') {
         refreshCustomer();
         refreshActiveOrders();
+        refreshVisit();
       }
     };
     window.addEventListener('focus', sync);
@@ -293,7 +334,7 @@ export function CustomerProvider({ children }) {
       document.removeEventListener('visibilitychange', sync);
       clearInterval(interval);
     };
-  }, [customer?._id, refreshCustomer, refreshActiveOrders]);
+  }, [customer?._id, refreshCustomer, refreshActiveOrders, refreshVisit]);
 
   // Add item with particular dish note
   const addToCart = (item, quantity = 1, dishNote = '') => {
@@ -420,6 +461,10 @@ export function CustomerProvider({ children }) {
         tableNumber,
         tableKey,
         isCounter: tableNumber === COUNTER,
+        // Visit over (table billed): menu and rewards only, no table number
+        visitEnded: visit.visitEnded,
+        logoutAt: visit.logoutAt,
+        viewOnly: tableNumber === COUNTER || visit.visitEnded,
         setTableNumber,
         restaurantInfo,
         gstRate,

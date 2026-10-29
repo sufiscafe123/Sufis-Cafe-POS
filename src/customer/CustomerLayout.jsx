@@ -17,7 +17,7 @@ const TITLES = [
 ];
 
 export default function CustomerLayout({ children }) {
-  const { customer, tableNumber, tableKey, isCounter, cartCount, cartSubtotal } = useCustomer();
+  const { customer, tableNumber, tableKey, isCounter, visitEnded, viewOnly, cartCount, cartSubtotal } = useCustomer();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -28,6 +28,11 @@ export default function CustomerLayout({ children }) {
   }
 
   const currentPath = location.pathname;
+
+  // Menu and rewards only: no cart, bill or order screens
+  if (viewOnly && ['/customer/cart', '/customer/bill', '/customer/pay', '/customer/order-status'].includes(currentPath)) {
+    return <Navigate to="/customer/home" replace />;
+  }
 
   const navItems = [
     { label: 'Home', path: '/customer/home', Icon: House },
@@ -47,7 +52,7 @@ export default function CustomerLayout({ children }) {
             <div className="st-header-title">{(TITLES.find(([p]) => currentPath.startsWith(p)) || [null, "Sufi's Cafe"])[1]}</div>
             <div className="st-header-sub">Hi, {customer?.name?.split(' ')[0] || 'Guest'}</div>
           </div>
-          <div className="st-table-pill">{isCounter ? 'Counter' : `T-${tableNumber}`}</div>
+          {!visitEnded && <div className="st-table-pill">{isCounter ? 'Counter' : `T-${tableNumber}`}</div>}
         </header>
         )}
 
@@ -57,7 +62,7 @@ export default function CustomerLayout({ children }) {
         </main>
 
         {/* Floating Cart Pill when items are added (hidden when on /customer/cart or /customer/bill) */}
-        {!isCounter && cartCount > 0 && !currentPath.includes('/cart') && !currentPath.includes('/bill') && (
+        {!viewOnly && cartCount > 0 && !currentPath.includes('/cart') && !currentPath.includes('/bill') && (
           <div
             className="cust-cart-pill"
             onClick={() => navigate('/customer/cart')}

@@ -29,8 +29,10 @@ export default function Billing() {
   const loadOrders = useCallback(async () => {
     try {
       const res = await axios.get('/api/orders?active=true');
-      setOrders(res.data);
-      setSelectedOrder(prev => (prev ? res.data.find(o => o._id === prev._id) || null : prev));
+      // Orders still waiting for a waiter's Accept can't be billed yet
+      const billable = res.data.filter(o => o.status !== 'awaiting');
+      setOrders(billable);
+      setSelectedOrder(prev => (prev ? billable.find(o => o._id === prev._id) || null : prev));
     } catch {
       toast.error('Could not load orders');
     }

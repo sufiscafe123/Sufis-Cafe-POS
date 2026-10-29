@@ -57,6 +57,7 @@ export async function billOrder({ orderId, restaurant, paymentMode, rewardId, us
   const order = orderDoc(row);
   const version: number = row.version;
   if (['completed', 'cancelled'].includes(order.status)) throw new ApiError(409, 'This order is already billed or cancelled');
+  if (order.status === 'awaiting') throw new ApiError(409, 'Accept this order first (it is waiting for a waiter).');
   if (!order.items.length) throw new ApiError(400, 'This order has no items');
 
   let customer = order.customerId ? await getCustomerById(order.customerId) : null;

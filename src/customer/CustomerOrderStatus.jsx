@@ -63,6 +63,8 @@ const CustomerOrderStatus = () => {
     );
   }
 
+  // A guest's first order on a free table waits for a waiter to accept it
+  const awaiting = currentOrder?.status === 'awaiting';
   const orderItemsTotal = currentOrder?.items?.reduce((sum, it) => sum + ((it.price || 0) * (it.quantity || 1)), 0) || currentOrder?.totalAmount || 0;
 
   return (
@@ -71,8 +73,10 @@ const CustomerOrderStatus = () => {
       {justPlaced && (
         <div className="st-os-sent">
           <div className="st-os-sent-check"><Check size={28} strokeWidth={2.6} aria-hidden="true" /></div>
-          <h2 className="st-os-sent-title">Order Sent to Kitchen!</h2>
-          <p>Your order has been placed. Our kitchen will start preparing it soon.</p>
+          <h2 className="st-os-sent-title">{awaiting ? 'Order Sent!' : 'Order Sent to Kitchen!'}</h2>
+          <p>{awaiting
+            ? 'A waiter will check your table and confirm it. Then the kitchen starts preparing it.'
+            : 'Your order has been placed. Our kitchen will start preparing it soon.'}</p>
           <button onClick={() => setJustPlaced(false)}>Track live status ↓</button>
         </div>
       )}
@@ -89,8 +93,14 @@ const CustomerOrderStatus = () => {
               T-{tableNumber || currentOrder?.tableNumber} • {new Date(currentOrder?.createdAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </div>
           </div>
-          <span className="st-badge ready">{STATUS_STEPS[currentStep].label}</span>
+          <span className="st-badge ready">{awaiting ? 'Waiting for staff' : STATUS_STEPS[currentStep].label}</span>
         </div>
+
+        {awaiting && (
+          <div className="st-notice" style={{ margin: '14px 0 0' }}>
+            ⏳ Waiting for our staff to confirm your order. A waiter will check your table shortly.
+          </div>
+        )}
 
         {/* Live kitchen progress */}
         <h4 className="st-block-title" style={{ margin: '18px 0 14px' }}>

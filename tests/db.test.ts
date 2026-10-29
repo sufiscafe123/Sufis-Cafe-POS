@@ -342,3 +342,35 @@ describe('day-wise bill numbers', () => {
     expect(b.bill_number).toBe(a.bill_number + 1); // the running bill number is unchanged
   });
 });
+
+describe('orders waiting for a waiter (table visits)', () => {
+  test('a guest order on a free table waits; items added keep it waiting; accepting sends it on', async () => {
+    const T3 = (await one<any>(`insert into public.restaurant_tables (restaurant_id, table_number) values ($1, 3) returning id`, [R])).id;
+    const first = await placeOrder({ table_id: T3, table_number: 3, needs_approval: true, items: items([CHAI, 'Masala Chai', 40, 1]) });
+    expect(first.created).toBe(true);
+    expect((await orderRow(first.order_id)).status).toBe('awaiting');
+
+    // More food from the same table goes into the same order, still waiting
+    const more = await placeOrder({ table_id: T3, table_number: 3, needs_approval: true, items: items([PANEER, 'Paneer Tikka', 220, 1]) });
+    expect(more).toEqual({ order_id: first.order_id, created: false });
+    expect((await orderRow(first.order_id)).status).toBe('awaiting');
+
+    await fn("select public.update_order_status($1, $2, 'pending')", [first.order_id, R]);
+    expect((await orderRow(first.order_id)).status).toBe('pending');
+  });
+
+  test('rejecting a waiting order frees the table; staff orders never wait', async () => {
+    const T4 = (await one<any>(`insert into public.restaurant_tables (restaurant_id, table_number) values ($1, 4) returning id`, [R])).id;
+    const res = await placeOrder({ table_id: T4, table_number: 4, needs_approval: true, items: items([CHAI, 'Masala Chai', 40, 1]) });
+    const out = await fn<any>("select public.update_order_status($1, $2, 'cancelled')", [res.order_id, R]);
+    expect(out.table_freed).toBe(true);
+
+    const staffOrder = await placeOrder({ table_id: T4, table_number: 4, waiter_id: WAITER, items: items([CHAI, 'Masala Chai', 40, 1]) });
+    expect((await orderRow(staffOrder.order_id)).status).toBe('pending');
+  });
+
+  test('the table-visits file can be run again safely', async () => {
+    const { readFileSync } = await import('node:fs');
+    await db.exec(readFileSync('supabase/migrations/20261029000005_table_visits.sql', 'utf8'));
+  });
+});

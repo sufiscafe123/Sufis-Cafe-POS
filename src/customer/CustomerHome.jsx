@@ -15,7 +15,7 @@ const WIFI_NAME = process.env.NEXT_PUBLIC_WIFI_NAME || '';
 const WIFI_PASSWORD = process.env.NEXT_PUBLIC_WIFI_PASSWORD || '';
 const INSTAGRAM = (process.env.NEXT_PUBLIC_INSTAGRAM || 'sufis.cafe').replace(/^@/, '');
 
-const STATUS_TEXT = { pending: 'Order received', accepted: 'Accepted', preparing: 'Being prepared', ready: 'Ready', served: 'Served' };
+const STATUS_TEXT = { awaiting: 'Waiting for staff to confirm', pending: 'Order received', accepted: 'Accepted', preparing: 'Being prepared', ready: 'Ready', served: 'Served' };
 
 
 function InstagramIcon() {
@@ -31,7 +31,7 @@ function InstagramIcon() {
 const sprig = (flip) => <Leaf size={16} strokeWidth={1.8} style={{ transform: flip ? 'scaleX(-1) rotate(-20deg)' : 'rotate(-20deg)' }} aria-hidden="true" />;
 
 export default function CustomerHome() {
-  const { customer, tableNumber, activeOrder, refreshCustomer, loyaltySettings, isCounter } = useCustomer();
+  const { customer, tableNumber, activeOrder, refreshCustomer, loyaltySettings, isCounter, visitEnded, viewOnly, logoutAt } = useCustomer();
   const billRequest = useBillRequest();
   const navigate = useNavigate();
   const [wifiOpen, setWifiOpen] = useState(false);
@@ -77,7 +77,8 @@ export default function CustomerHome() {
     }
   };
 
-  const tableLabel = isCounter ? 'Counter' : `T-${tableNumber ?? ''}`;
+  // No table number once the visit is over (table billed)
+  const tableLabel = isCounter ? 'Counter' : visitEnded ? '' : `T-${tableNumber ?? ''}`;
 
   return (
     <div className="sh-page">
@@ -85,7 +86,7 @@ export default function CustomerHome() {
       <div className="sh-screen">
       {/* Hero photo with the table chip */}
       <div className="sh-hero">
-        <div className="sh-chip">{tableLabel}</div>
+        {tableLabel && <div className="sh-chip">{tableLabel}</div>}
       </div>
 
       <div className="sh-sheet">
@@ -127,7 +128,12 @@ export default function CustomerHome() {
         </div>
 
         {/* Live order (only while one is open) */}
-        {!isCounter && activeOrder && (
+        {visitEnded && (
+          <div className="sh-order" style={{ cursor: 'default' }}>
+            <span>☕ Thank you for visiting! Menu &amp; rewards stay open{logoutAt ? ` till ${new Date(logoutAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}` : ''}.</span>
+          </div>
+        )}
+        {!viewOnly && activeOrder && (
           <div className="sh-order" onClick={() => navigate('/customer/order-status')}>
             <span>🍽️ Order #{activeOrder.orderNumber} · {STATUS_TEXT[activeOrder.status] || activeOrder.status}</span>
             <span>Track →</span>
@@ -137,13 +143,13 @@ export default function CustomerHome() {
         <button className="sh-menu" onClick={() => navigate('/customer/menu')}>
           <span>
             <span className="sh-menu-title" style={{ display: 'block' }}>View Menu</span>
-            <span className="sh-menu-sub" style={{ display: 'block' }}>{isCounter ? 'Tap to explore our menu' : 'Tap to order straight to your table'}</span>
+            <span className="sh-menu-sub" style={{ display: 'block' }}>{viewOnly ? 'Tap to explore our menu' : 'Tap to order straight to your table'}</span>
           </span>
           <BookOpen size={46} strokeWidth={1.4} aria-hidden="true" />
         </button>
 
         <div className="sh-grid">
-          {!isCounter && (
+          {!viewOnly && (
             <>
               <button className="sh-tile" onClick={callWaiter} disabled={callingWaiter}>
                 <ConciergeBell size={27} strokeWidth={1.5} color="#244D39" aria-hidden="true" />

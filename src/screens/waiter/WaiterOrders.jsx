@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { useSocket } from '../../context/SocketContext';
 
 const STATUS_COLORS = {
+  awaiting:  'badge-red',
   pending:   'badge-orange',
   accepted:  'badge-blue',
   preparing: 'badge-purple',
@@ -16,6 +17,7 @@ const STATUS_COLORS = {
 };
 
 const STATUS_ICON = {
+  awaiting:  '🆕',
   pending:   '⏳',
   accepted:  '✅',
   preparing: '👨‍🍳',

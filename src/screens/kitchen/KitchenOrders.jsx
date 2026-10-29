@@ -248,7 +248,7 @@ export default function KitchenOrders() {
 
   const load = async () => {
     const res = await axios.get('/api/orders?active=true');
-    const active = res.data.filter(o => !['completed', 'cancelled', 'served'].includes(o.status));
+    const active = res.data.filter(o => !['completed', 'cancelled', 'served', 'awaiting'].includes(o.status));
     setOrders(uniqueById(active));
   };
 
@@ -258,11 +258,13 @@ export default function KitchenOrders() {
     if (!socket) return;
 
     socket.on('new-order', (order) => {
+      if (order.status === 'awaiting') return;
       setOrders(prev => [order, ...prev.filter(o => o._id !== order._id)]);
       toast.success(`🔔 New order! Table T${order.tableNumber} — #${order.orderNumber}`, { duration: 8000 });
     });
 
     socket.on('order-updated', (updated) => {
+      if (updated.status === 'awaiting') return;
       // A served order that gets new items comes back to the kitchen as "preparing"
       setOrders(prev => {
         if (['completed', 'cancelled', 'served'].includes(updated.status)) return prev.filter(o => o._id !== updated._id);
@@ -282,7 +284,7 @@ export default function KitchenOrders() {
     });
 
     socket.on('order-status-updated', (updated) => {
-      if (['completed', 'cancelled', 'served'].includes(updated.status)) {
+      if (['completed', 'cancelled', 'served', 'awaiting'].includes(updated.status)) {
         setOrders(prev => prev.filter(o => o._id !== updated._id));
       } else {
         setOrders(prev => prev.map(o => o._id === updated._id ? updated : o));

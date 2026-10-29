@@ -18,7 +18,7 @@ const DEFAULT_CATEGORIES = [
 ];
 
 export default function CustomerMenu() {
-  const { getItemQuantity, addToCart, updateQuantity, socket, isCounter } = useCustomer();
+  const { getItemQuantity, addToCart, updateQuantity, socket, isCounter, visitEnded, viewOnly } = useCustomer();
   const [menuItems, setMenuItems] = useState([]);
   const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
   const [loading, setLoading] = useState(true);
@@ -131,6 +131,11 @@ export default function CustomerMenu() {
           🧑‍🍳 Please give your order to our captain. Show your phone at the counter to collect stamps.
         </div>
       )}
+      {visitEnded && (
+        <div className="st-notice">
+          ☕ Thank you for visiting! To order again, scan the QR code on your table.
+        </div>
+      )}
 
       {/* Categories */}
       <div className="category-scroll st-cats">
@@ -185,7 +190,7 @@ export default function CustomerMenu() {
                 <div className="st-dish-foot">
                   <span className="st-price">₹{item.price}</span>
 
-                  {isCounter ? null : qty > 0 ? (
+                  {viewOnly ? null : qty > 0 ? (
                     <div className="st-stepper" onClick={(e) => e.stopPropagation()}>
                       <button onClick={() => updateQuantity(item._id, qty - 1)} aria-label="Remove one"><Minus size={16} aria-hidden="true" /></button>
                       <span>{qty}</span>
