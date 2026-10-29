@@ -5,14 +5,16 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useNavigate } from '@/lib/router';
 import { useAuth } from '../../context/AuthContext';
+import { useMenuCategories } from '../../components/shared/useMenuCategories';
 
 export default function Takeaway() {
   const { restaurant } = useAuth();
   const navigate = useNavigate();
 
   const [menuItems, setMenuItems] = useState([]);
-  const [categories, setCategories] = useState(['All']);
   const [activeCategory, setActiveCategory] = useState('All');
+  // Categories from Admin → Menu, in menu order
+  const { categoryTabs, categoryColor, sortByMenu } = useMenuCategories(menuItems);
   const [dietFilter, setDietFilter] = useState('ALL'); // 'ALL' | 'VEG' | 'NON_VEG'
   const [search, setSearch] = useState('');
 
@@ -39,8 +41,6 @@ export default function Takeaway() {
     try {
       const res = await axios.get('/api/menu?available=true');
       setMenuItems(res.data);
-      const uniqueCats = ['All', ...new Set(res.data.map(i => i.category).filter(Boolean))];
-      setCategories(uniqueCats);
     } catch (err) {
       toast.error('Failed to load menu items');
     } finally {
@@ -54,7 +54,7 @@ export default function Takeaway() {
     const isVeg = item.isVeg !== false;
     const matchesDiet = dietFilter === 'ALL' || (dietFilter === 'VEG' && isVeg) || (dietFilter === 'NON_VEG' && !isVeg);
     return matchesCategory && matchesSearch && matchesDiet;
-  });
+  }).sort(sortByMenu);
 
   const addToCart = (item) => {
     setCart(prev => {
@@ -139,10 +139,6 @@ export default function Takeaway() {
     setLastPlacedOrder(null);
   };
 
-  const catColors = {
-    'Starters': '#FF6B35', 'Main Course': '#3182ce', 'Drinks': '#38a169',
-    'Desserts': '#805ad5', 'Fast Food': '#e53e3e', 'Special Items': '#ED8936'
-  };
 
   if (loading) {
     return <div className="loading-center"><div className="spinner"></div></div>;
@@ -262,7 +258,7 @@ export default function Takeaway() {
 
               {/* Categories */}
               <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
-                {categories.map(cat => (
+                {categoryTabs.map(cat => (
                   <button
                     key={cat}
                     onClick={() => setActiveCategory(cat)}
@@ -273,7 +269,7 @@ export default function Takeaway() {
                       fontWeight: 600,
                       whiteSpace: 'nowrap',
                       border: activeCategory === cat ? 'none' : '1px solid #E2E8F0',
-                      background: activeCategory === cat ? (catColors[cat] || '#FF6B35') : 'white',
+                      background: activeCategory === cat ? categoryColor(cat) : 'white',
                       color: activeCategory === cat ? 'white' : '#4A5568',
                       cursor: 'pointer',
                       transition: 'all 0.2s'

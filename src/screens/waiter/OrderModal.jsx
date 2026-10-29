@@ -5,8 +5,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { VegBadge } from '../admin/Menu';
 import { useAuth } from '../../context/AuthContext';
-
-const CATEGORIES = ['All', 'Starters', 'Main Course', 'Drinks', 'Desserts', 'Fast Food', 'Special Items'];
+import { useMenuCategories } from '../../components/shared/useMenuCategories';
 
 export default function OrderModal({ table, onClose, onSuccess }) {
   const { restaurant } = useAuth();
@@ -21,6 +20,8 @@ export default function OrderModal({ table, onClose, onSuccess }) {
   const [existingOrder, setExistingOrder] = useState(null);
   const [loading, setLoading] = useState(false);
   const [mobileCartOpen, setMobileCartOpen] = useState(false);
+  // Categories from Admin → Menu, in menu order
+  const { categoryTabs, categoryColor, sortByMenu } = useMenuCategories(menuItems);
 
   useEffect(() => {
     axios.get('/api/menu?available=true').then(r => setMenuItems(r.data));
@@ -49,7 +50,7 @@ export default function OrderModal({ table, onClose, onSuccess }) {
     const isVeg = i.isVeg !== false;
     const matchesDiet = dietFilter === 'ALL' || (dietFilter === 'VEG' && isVeg) || (dietFilter === 'NON_VEG' && !isVeg);
     return matchesCat && matchesSearch && matchesDiet;
-  });
+  }).sort(sortByMenu);
 
   const addToCart = (item) => {
     setCart(prev => {
@@ -102,11 +103,6 @@ export default function OrderModal({ table, onClose, onSuccess }) {
     } finally {
       setLoading(false);
     }
-  };
-
-  const catColors = {
-    'Starters': '#FF6B35', 'Main Course': '#3182ce', 'Drinks': '#38a169',
-    'Desserts': '#805ad5', 'Fast Food': '#e53e3e', 'Special Items': '#ED8936'
   };
 
   return (
@@ -167,7 +163,7 @@ export default function OrderModal({ table, onClose, onSuccess }) {
               </div>
 
               <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
-                {CATEGORIES.map(cat => (
+                {categoryTabs.map(cat => (
                   <button key={cat} onClick={() => setActiveCategory(cat)}
                     className={`btn btn-sm ${activeCategory === cat ? 'btn-primary' : 'btn-ghost'}`}
                     style={{ whiteSpace: 'nowrap', fontSize: 12 }}>{cat}</button>
@@ -187,7 +183,7 @@ export default function OrderModal({ table, onClose, onSuccess }) {
                     transition: 'all 0.2s', cursor: 'pointer'
                   }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
-                      <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', color: catColors[item.category] || '#718096', letterSpacing: '0.05em' }}>{item.category}</div>
+                      <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', color: categoryColor(item.category), letterSpacing: '0.05em' }}>{item.category}</div>
                       <strong style={{ color: '#FF6B35', fontSize: 14 }}>₹{item.price}</strong>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>

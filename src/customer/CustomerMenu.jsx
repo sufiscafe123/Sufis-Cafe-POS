@@ -7,15 +7,8 @@ import axios from 'axios';
 import { Minus, Plus, Search, X } from 'lucide-react';
 import CoffeeBean from './CoffeeBean';
 
-const DEFAULT_CATEGORIES = [
-  { id: 'all', label: 'All Items', icon: '🍽️' },
-  { id: 'Starters', label: 'Starters', icon: '🥟' },
-  { id: 'Main Course', label: 'Main Course', icon: '🍲' },
-  { id: 'Pizza', label: 'Pizza', icon: '🍕' },
-  { id: 'Burgers', label: 'Burgers', icon: '🍔' },
-  { id: 'Beverages', label: 'Beverages', icon: '🥤' },
-  { id: 'Desserts', label: 'Desserts', icon: '🍰' }
-];
+// Until the admin's categories load (they come from Admin → Menu)
+const DEFAULT_CATEGORIES = [{ id: 'all', label: 'All Items', icon: '🍽️' }];
 
 export default function CustomerMenu() {
   const { getItemQuantity, addToCart, updateQuantity, socket, isCounter, visitEnded, viewOnly } = useCustomer();

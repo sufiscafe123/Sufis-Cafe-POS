@@ -4,15 +4,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const DEFAULT_CATEGORIES = [
-  { name: 'Starters', icon: '🥟' },
-  { name: 'Main Course', icon: '🍲' },
-  { name: 'Pizza', icon: '🍕' },
-  { name: 'Burgers', icon: '🍔' },
-  { name: 'Beverages', icon: '🥤' },
-  { name: 'Desserts', icon: '🍰' }
-];
-
 export const VegBadge = ({ isVeg, size = 16 }) => {
   const dotSize = Math.round(size * 0.44);
   return (
@@ -44,7 +35,7 @@ export const VegBadge = ({ isVeg, size = 16 }) => {
 
 const emptyForm = {
   name: '',
-  category: 'Main Course',
+  category: '',
   customCategory: '',
   price: '',
   description: '',
@@ -55,7 +46,7 @@ const emptyForm = {
 
 export default function Menu() {
   const [items, setItems] = useState([]);
-  const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
+  const [categories, setCategories] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [form, setForm] = useState(emptyForm);
@@ -96,7 +87,7 @@ export default function Menu() {
   }, []);
 
   const openAdd = () => {
-    const firstCat = categories[0]?.name || 'Main Course';
+    const firstCat = categories[0]?.name || '';
     setForm({ ...emptyForm, category: firstCat });
     setEditId(null);
     setShowModal(true);
