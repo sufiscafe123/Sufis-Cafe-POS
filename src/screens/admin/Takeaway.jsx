@@ -209,9 +209,15 @@ export default function Takeaway() {
         </div>
 
         {/* Main Grid: Menu on Left, Cart on Right */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 390px', gap: 20, alignItems: 'start' }}>
+        {/* Small screens: the cart sits under the menu, this button jumps to it */}
+        {cart.length > 0 && (
+          <button type="button" className="takeaway-cart-jump" onClick={() => document.getElementById('parcel-cart')?.scrollIntoView({ behavior: 'smooth' })}>
+            🛍️ View Parcel Cart · {cart.reduce((n, i) => n + i.quantity, 0)} items · ₹{subtotal}
+          </button>
+        )}
+        <div className="takeaway-grid">
           {/* Menu Column */}
-          <div>
+          <div className="takeaway-menu">
             {/* Search and Filters */}
             <div className="card mb-16" style={{ padding: '14px 16px' }}>
               <div style={{ display: 'flex', gap: 12, marginBottom: 12, flexWrap: 'wrap' }}>
@@ -257,7 +263,8 @@ export default function Takeaway() {
               </div>
 
               {/* Categories */}
-              <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
+              {/* Wraps onto more lines so a long menu never pushes the cart off screen */}
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', paddingBottom: 4 }}>
                 {categoryTabs.map(cat => (
                   <button
                     key={cat}
@@ -375,7 +382,7 @@ export default function Takeaway() {
           </div>
 
           {/* Cart Column (Sticky) */}
-          <div style={{ position: 'sticky', top: 20 }}>
+          <div id="parcel-cart" className="takeaway-cart">
             <div className="card" style={{ padding: 18, border: '1.5px solid #E2E8F0', boxShadow: '0 4px 16px rgba(0,0,0,0.06)' }}>
               <div className="flex-between mb-16" style={{ paddingBottom: 12, borderBottom: '1.5px solid #EDF2F7' }}>
                 <div>
