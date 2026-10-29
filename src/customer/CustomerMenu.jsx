@@ -98,6 +98,11 @@ export default function CustomerMenu() {
     return matchesCategory && matchesSearch && matchesVeg;
   });
 
+  // Same order as the printed menu: by the admin's category order, then by name
+  const categoryRank = new Map(categories.map((c, i) => [c.id.toLowerCase(), i]));
+  const rank = (item) => categoryRank.get((item.category || '').toLowerCase()) ?? categories.length;
+  filteredItems.sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name));
+
   return (
     <div className="customer-page-content st-page">
       {/* Search */}
@@ -174,12 +179,18 @@ export default function CustomerMenu() {
         </div>
       ) : (
         <div className="st-list">
-          {filteredItems.map(item => {
+          {filteredItems.map((item, index) => {
             const isVeg = item.isVegetarian ?? item.isVeg ?? true;
             const qty = typeof getItemQuantity === 'function' ? getItemQuantity(item._id) : 0;
+            // "All Items": a heading at the start of each category
+            const heading = selectedCategory === 'all' && item.category !== filteredItems[index - 1]?.category
+              ? categories.find(c => c.id.toLowerCase() === (item.category || '').toLowerCase()) || { label: item.category, icon: '🍽️' }
+              : null;
 
             return (
-              <div key={item._id} className="st-card st-dish" onClick={() => setActiveModalItem(item)}>
+              <React.Fragment key={item._id}>
+              {heading && <h3 className="st-menu-heading"><span>{heading.icon}</span> {heading.label}</h3>}
+              <div className="st-card st-dish" onClick={() => setActiveModalItem(item)}>
                 {/* Dish info (no photos: the menu shows exactly what the admin sets) */}
                 <div className="st-dish-top">
                   <VegMark veg={isVeg} />
@@ -209,6 +220,7 @@ export default function CustomerMenu() {
                   )}
                 </div>
               </div>
+              </React.Fragment>
             );
           })}
         </div>

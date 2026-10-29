@@ -15,7 +15,8 @@
     "test": "vitest run",
     "create-admin": "node scripts/create-admin.mjs",
     "migrate:mongo": "node scripts/migrate-from-mongo.mjs",
-    "fix-bills": "node scripts/fix-discounted-bills.mjs"
+    "fix-bills": "node scripts/fix-discounted-bills.mjs",
+    "import-menu": "node scripts/import-menu.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

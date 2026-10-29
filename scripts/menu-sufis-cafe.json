@@ -1,0 +1,145 @@
+{
+  "note": "Sufi's Cafe menu, typed from the printed menu (Oct 2026). Prices in INR. Load with: npm run import-menu",
+  "categories": [
+    {
+      "name": "Coffee", "icon": "☕",
+      "items": [
+        ["Espresso", 290, "Made with premium arabica beans"],
+        ["Double Espresso", 340, "Made with premium arabica beans"],
+        ["Americano", 330, ""],
+        ["Cappuccino", 380, ""],
+        ["Latte", 380, ""],
+        ["Flat White", 400, ""],
+        ["Mocha", 430, ""],
+        ["Caramel Latte", 450, ""],
+        ["Hazelnut Latte", 450, ""],
+        ["Vanilla Latte", 450, ""],
+        ["Spanish Latte", 460, "With condensed milk"],
+        ["Cafe Au Lait", 420, ""],
+        ["Affogato", 520, ""]
+      ]
+    },
+    {
+      "name": "Non Coffee", "icon": "🍵",
+      "items": [
+        ["Hot Chocolate", 390, ""],
+        ["White Hot Chocolate", 420, ""],
+        ["Matcha Latte", 450, ""],
+        ["Chai Latte", 330, ""],
+        ["Masala Chai", 250, ""],
+        ["Kashmiri Chai", 280, ""],
+        ["Golden Milk", 320, "Haldi doodh"],
+        ["Iced Matcha Latte", 480, ""]
+      ]
+    },
+    {
+      "name": "Cold Brews & Iced Coffees", "icon": "🧊",
+      "items": [
+        ["Classic Cold Brew", 450, ""],
+        ["Vanilla Cold Brew", 490, ""],
+        ["Hazelnut Cold Brew", 490, ""],
+        ["Cold Brew Mocha", 520, ""],
+        ["Iced Latte", 450, ""],
+        ["Caramel Iced Latte", 490, ""],
+        ["Iced Americano", 420, ""],
+        ["Iced Spanish Latte", 490, ""]
+      ]
+    },
+    {
+      "name": "Signature Coffee", "icon": "⭐",
+      "items": [
+        ["Sufi's Special Coffee", 550, "House blend"],
+        ["Rose White Mocha", 550, ""],
+        ["Pistachio Latte", 580, ""],
+        ["Turkish Coffee", 520, ""],
+        ["Coconut Latte", 550, ""],
+        ["Maple Cinnamon Latte", 550, ""],
+        ["Tiramisu Latte", 580, ""]
+      ]
+    },
+    {
+      "name": "Premium Brews", "icon": "🫖",
+      "items": [
+        ["Pour Over", 650, "Slow brewed perfection"],
+        ["Chemex", 680, "Slow brewed perfection"],
+        ["AeroPress", 620, "Slow brewed perfection"],
+        ["French Press", 620, "Slow brewed perfection"],
+        ["Siphon Brew", 750, "Slow brewed perfection"]
+      ]
+    },
+    {
+      "name": "Mocktails", "icon": "🍹",
+      "items": [
+        ["Virgin Mojito", 490, "Refreshing, vibrant, non-alcoholic"],
+        ["Blue Ocean", 490, "Refreshing, vibrant, non-alcoholic"],
+        ["Passion Paradise", 500, "Refreshing, vibrant, non-alcoholic"],
+        ["Berry Bliss", 500, "Refreshing, vibrant, non-alcoholic"],
+        ["Pina Colada", 500, "Refreshing, vibrant, non-alcoholic"],
+        ["Green Apple Mojito", 500, "Refreshing, vibrant, non-alcoholic"],
+        ["Watermelon Cooler", 490, "Refreshing, vibrant, non-alcoholic"],
+        ["Citrus Sparkle", 500, "Refreshing, vibrant, non-alcoholic"],
+        ["Minty Lemonade", 480, "Refreshing, vibrant, non-alcoholic"],
+        ["Lychee Love", 500, "Refreshing, vibrant, non-alcoholic"],
+        ["Sunset Delight", 500, "Refreshing, vibrant, non-alcoholic"],
+        ["Guava Punch", 480, "Refreshing, vibrant, non-alcoholic"],
+        ["Sufi's Special Mocktail", 520, "Refreshing, vibrant, non-alcoholic"]
+      ]
+    },
+    {
+      "name": "Milkshakes", "icon": "🥤",
+      "items": [
+        ["Oreo Shake", 550, ""],
+        ["KitKat Shake", 580, ""],
+        ["Ferrero Rocher Shake", 620, ""],
+        ["Brownie Shake", 580, ""],
+        ["Nutella Shake", 600, ""],
+        ["Strawberry Shake", 520, ""],
+        ["Mango Shake", 520, ""],
+        ["Blueberry Shake", 540, ""],
+        ["Butterscotch Shake", 520, ""],
+        ["Cold Coffee Shake", 520, ""],
+        ["Pistachio Shake", 620, ""],
+        ["Lotus Biscoff Shake", 620, ""]
+      ]
+    },
+    {
+      "name": "Food", "icon": "🥪",
+      "items": [
+        ["Veg Sandwich", 430, ""],
+        ["Grilled Sandwich", 470, ""],
+        ["Cheese Sandwich", 470, ""],
+        ["Paneer Tikka Wrap", 510, ""],
+        ["Peri Peri Wrap", 510, ""],
+        ["Veg Burger", 470, ""],
+        ["Peri Peri Burger", 500, ""],
+        ["Loaded Fries", 450, ""],
+        ["Peri Peri Fries", 450, ""],
+        ["Cheese Nachos", 490, ""],
+        ["Sufi's Special Platter", 850, ""]
+      ]
+    },
+    {
+      "name": "Desserts", "icon": "🍰",
+      "items": [
+        ["Chocolate Brownie", 450, ""],
+        ["Cheesecake", 480, ""],
+        ["Tiramisu", 520, ""],
+        ["Chocolate Lava Cake", 550, ""],
+        ["Kulfi Falooda", 480, ""],
+        ["Lotus Biscoff Cheesecake", 550, ""],
+        ["Sufi's Special Dessert", 620, ""]
+      ]
+    },
+    {
+      "name": "Add-ons", "icon": "➕",
+      "items": [
+        ["Extra Shot", 90, ""],
+        ["Flavour Syrup", 90, "Vanilla / Caramel / Hazelnut / Pistachio / Rose / Irish"],
+        ["Oat Milk", 120, ""],
+        ["Almond Milk", 120, ""],
+        ["Ice Cream", 150, ""],
+        ["Whipped Cream", 100, ""]
+      ]
+    }
+  ]
+}

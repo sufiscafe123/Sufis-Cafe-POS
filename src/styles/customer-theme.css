@@ -189,3 +189,7 @@
 .st-os-items { background: #F7F5EE; border: 1px solid #E8E6DA; border-radius: 14px; padding: 12px 14px; }
 .st-os-item { padding-bottom: 6px; border-bottom: 1px dashed #E2E2D6; }
 .st-round { font-size: 11px; background: var(--sh-sage); color: var(--sh-green-dark); padding: 1px 7px; border-radius: 999px; margin-left: 6px; font-weight: 700; }
+
+/* Menu: category heading inside "All Items" */
+.st-menu-heading { display: flex; align-items: center; gap: 8px; font-family: var(--sh-serif); font-weight: 600; font-size: 24px; color: var(--sh-green-dark); margin: 10px 2px -2px; }
+.st-menu-heading:first-child { margin-top: 0; }
