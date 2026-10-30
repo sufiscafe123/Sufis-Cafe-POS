@@ -7,6 +7,7 @@ import { useCustomer } from './CustomerContext';
 import toast from 'react-hot-toast';
 import { ArrowRight, Gift, Leaf, Phone, ScanLine, User } from 'lucide-react';
 import CoffeeBean from './CoffeeBean';
+import Link from 'next/link';
 
 export default function CustomerLogin() {
   const navigate = useNavigate();
@@ -109,6 +110,7 @@ export default function CustomerLogin() {
             </p>
           </div>
           <div className="sl-fine">Prices in INR • Taxes applicable • Please inform us about allergies</div>
+          <div className="sl-fine"><Link href="/customer/terms">Terms &amp; Conditions</Link> · <Link href="/customer/privacy">Privacy Policy</Link></div>
         </div>
       </div>
     );
@@ -175,7 +177,7 @@ export default function CustomerLogin() {
           <div className="sl-perk"><Gift size={16} strokeWidth={1.8} aria-hidden="true" /> Earn a free stamp with every visit</div>
         </form>
 
-        <div className="sl-fine">By continuing, you agree to our Terms &amp; Privacy.</div>
+        <div className="sl-fine">By continuing, you agree to our <Link href="/customer/terms">Terms</Link> &amp; <Link href="/customer/privacy">Privacy Policy</Link>.</div>
       </div>
     </div>
   );

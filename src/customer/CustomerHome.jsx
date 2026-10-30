@@ -8,6 +8,7 @@ import { useNavigate } from '@/lib/router';
 import { useCustomer } from './CustomerContext';
 import { useBillRequest } from './useBillRequest';
 import CoffeeBean from './CoffeeBean';
+import Link from 'next/link';
 
 // Details shown to guests. Set them in .env.local (see .env.example).
 const REVIEW_URL = process.env.NEXT_PUBLIC_REVIEW_URL || '';
@@ -192,6 +193,7 @@ export default function CustomerHome() {
             <InstagramIcon /> @{INSTAGRAM}
           </a>
           <div className="sh-fine">Prices in INR • Taxes applicable • Please inform us about allergies</div>
+          <div className="sh-fine"><Link href="/customer/terms">Terms &amp; Conditions</Link> · <Link href="/customer/privacy">Privacy Policy</Link></div>
         </div>
 
       {/* Wi-Fi details */}

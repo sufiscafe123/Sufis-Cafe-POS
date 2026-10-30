@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useCustomer } from './CustomerContext';
 import CoffeeBean from './CoffeeBean';
 import { ChevronRight, Gift, LogOut, X } from 'lucide-react';
+import Link from 'next/link';
 
 const CustomerProfile = () => {
   const navigate = useNavigate();
@@ -124,6 +125,7 @@ const CustomerProfile = () => {
       <button className="st-signout" onClick={logoutCustomer}>
         <LogOut size={16} aria-hidden="true" /> Sign Out / Change Mobile Number
       </button>
+      <div className="st-legal"><Link href="/customer/terms">Terms &amp; Conditions</Link> · <Link href="/customer/privacy">Privacy Policy</Link></div>
 
       {/* Past order receipt */}
       {selectedPastOrder && (
