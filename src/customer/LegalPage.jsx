@@ -23,7 +23,7 @@ function Contact() {
   );
 }
 
-function TermsContent({ minSpend, stampsPerCard }) {
+function TermsContent({ minSpend, stampsPerCard, rewards }) {
   return (
     <>
       <section>
@@ -50,12 +50,15 @@ function TermsContent({ minSpend, stampsPerCard }) {
       </section>
       <section>
         <h2>4. Loyalty stamps and rewards</h2>
+        <p>{BUSINESS} decides the loyalty rules: the minimum bill for a stamp, the number of stamps on a card and the rewards. The current rules are always shown in the app.</p>
         <ul>
-          <li>You earn 1 stamp for each bill of ₹{minSpend} or more. The stamp is added when your bill is generated.</li>
-          <li>A stamp card has {stampsPerCard} stamps. The rewards on the card are free items, as shown in the app.</li>
-          <li>Rewards are claimed at the counter: show your phone, and our staff will mark the reward as claimed.</li>
+          <li>Right now you earn 1 stamp for each bill of ₹{minSpend} or more. The stamp is added when your bill is generated.</li>
+          <li>Right now a stamp card has {stampsPerCard} stamps.{rewards.length > 0 && <> The rewards are: {rewards.map((m, i) => (
+            <React.Fragment key={m.milestoneId || i}>{i > 0 && (i === rewards.length - 1 ? ' and ' : ', ')}<strong>{m.title}</strong> at {m.requiredStamps} stamps</React.Fragment>
+          ))}.</>}</li>
+          <li>Rewards are free items, claimed at the counter: show your phone, and our staff will mark the reward as claimed.</li>
           <li>Stamps and rewards belong to your mobile number. They cannot be exchanged for cash or transferred.</li>
-          <li>We may change or end the loyalty program. Changes will be shown in the app.</li>
+          <li>{BUSINESS} may change these rules, the rewards, or end the loyalty program at any time. Changes are shown in the app.</li>
         </ul>
       </section>
       <section>
@@ -167,7 +170,11 @@ export default function LegalPage({ kind }) {
 
         <article className="lg-body">
           {isTerms
-            ? <TermsContent minSpend={loyaltySettings?.minSpendForStamp ?? 200} stampsPerCard={loyaltySettings?.stampsPerCard || 8} />
+            ? <TermsContent
+                minSpend={loyaltySettings?.minSpendForStamp ?? 200}
+                stampsPerCard={loyaltySettings?.stampsPerCard || 8}
+                rewards={(loyaltySettings?.milestones || []).filter(m => m.isActive !== false).sort((a, b) => a.requiredStamps - b.requiredStamps)}
+              />
             : <PrivacyContent />}
         </article>
 
