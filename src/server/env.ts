@@ -1,7 +1,8 @@
 import 'server-only';
 
 function required(name: string): string {
-  const value = process.env[name];
+  // Trimmed: a key pasted with a stray space (e.g. in the Vercel dashboard) still works
+  const value = process.env[name]?.trim();
   if (!value) throw new Error(`${name} is not set. Copy .env.example to .env.local and fill it in.`);
   return value;
 }
