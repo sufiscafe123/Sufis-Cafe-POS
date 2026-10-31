@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import DigitalMenuQRModal from '../../components/shared/DigitalMenuQRModal';
 
 export const VegBadge = ({ isVeg, size = 16 }) => {
   const dotSize = Math.round(size * 0.44);
@@ -49,6 +50,7 @@ export default function Menu() {
   const [categories, setCategories] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [showMenuQRModal, setShowMenuQRModal] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [editId, setEditId] = useState(null);
   const [activeCategory, setActiveCategory] = useState('All');
@@ -228,6 +230,13 @@ export default function Menu() {
         </div>
 
         <div style={{ display: 'flex', gap: 10 }}>
+          <button
+            className="btn btn-secondary"
+            onClick={() => setShowMenuQRModal(true)}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 700 }}
+          >
+            📱 Digital Menu QR
+          </button>
           <button
             className="btn btn-secondary"
             onClick={() => setShowCategoryModal(true)}
@@ -627,6 +636,13 @@ export default function Menu() {
             </form>
           </div>
         </div>
+      )}
+
+      {showMenuQRModal && (
+        <DigitalMenuQRModal
+          restaurantName="Sufi's Cafe"
+          onClose={() => setShowMenuQRModal(false)}
+        />
       )}
     </div>
   );

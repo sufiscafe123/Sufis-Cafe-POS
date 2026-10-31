@@ -1,0 +1,336 @@
+/* =====================================================================
+   Sufi's Cafe - Luxury Digital Menu Theme
+   Emerald Green & Sufi Gold Aesthetic
+===================================================================== */
+
+.digital-menu-root {
+  min-height: 100vh;
+  width: 100%;
+  background: #07241A;
+  background: radial-gradient(ellipse at 50% 0%, #0D3728 0%, #07241A 60%, #051A13 100%);
+  color: #F6F2E9;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.digital-menu-container {
+  width: 100%;
+  max-width: 520px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 0 60px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* ─── HEADER ─── */
+.dm-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 20px 16px;
+}
+
+.dm-logo-wrap {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.dm-logo {
+  width: 98px;
+  height: 98px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(212, 175, 55, 0.45);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(212, 175, 55, 0.15);
+  display: block;
+  background: #0B2B20;
+}
+
+.dm-cafe-name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 34px;
+  font-weight: 700;
+  color: #D8B467;
+  letter-spacing: 0.02em;
+  margin: 0 0 6px 0;
+  line-height: 1.15;
+}
+
+.dm-tagline {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #D8B467;
+  margin: 0 0 12px 0;
+  opacity: 0.95;
+}
+
+.dm-quote {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 16px;
+  color: #D8B467;
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* ─── CATEGORY PILL NAVIGATION ─── */
+.dm-category-nav-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: rgba(7, 36, 26, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 12px 0 14px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  margin-bottom: 20px;
+}
+
+.dm-category-nav {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 0 18px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.dm-category-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.dm-category-pill {
+  flex-shrink: 0;
+  padding: 8px 20px;
+  border-radius: 9999px;
+  font-size: 13.5px;
+  font-weight: 500;
+  border: 1px solid rgba(216, 180, 103, 0.35);
+  background: rgba(9, 41, 30, 0.7);
+  color: #EBD49B;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.dm-category-pill:hover {
+  background: rgba(216, 180, 103, 0.15);
+  border-color: rgba(216, 180, 103, 0.6);
+}
+
+.dm-category-pill.active {
+  background: #CFA854;
+  background: linear-gradient(135deg, #DFB967 0%, #C89F48 100%);
+  color: #07241A;
+  font-weight: 700;
+  border-color: #CFA854;
+  box-shadow: 0 4px 14px rgba(207, 168, 84, 0.35);
+}
+
+/* ─── FRAMED MENU CARD ─── */
+.dm-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 0 16px;
+}
+
+.dm-menu-card {
+  border: 1px solid rgba(216, 180, 103, 0.4);
+  border-radius: 20px;
+  background: rgba(10, 42, 31, 0.65);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 26px 20px 22px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 0 1px rgba(216, 180, 103, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.dm-card-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.dm-card-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #D8B467;
+  margin: 0 0 4px 0;
+}
+
+.dm-card-subtitle {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 14.5px;
+  color: #BCA477;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.dm-card-divider {
+  width: 52px;
+  height: 1px;
+  background: #CFA854;
+  margin: 14px auto 0;
+  opacity: 0.75;
+}
+
+/* ─── MENU ITEMS LIST ─── */
+.dm-items-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.dm-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(216, 180, 103, 0.14);
+  gap: 16px;
+}
+
+.dm-item-row:last-child {
+  border-bottom: none;
+  padding-bottom: 4px;
+}
+
+.dm-item-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Veg / Non-Veg Indicator */
+.dm-veg-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.dm-veg-mark.veg {
+  border: 1.5px solid #10B981;
+}
+
+.dm-veg-mark.non-veg {
+  border: 1.5px solid #EF4444;
+}
+
+.dm-veg-mark-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.dm-veg-mark.veg .dm-veg-mark-dot {
+  background-color: #10B981;
+}
+
+.dm-veg-mark.non-veg .dm-veg-mark-dot {
+  background-color: #EF4444;
+}
+
+.dm-item-name {
+  font-size: 15.5px;
+  font-weight: 500;
+  color: #F8F3EA;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.dm-item-price {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: #D8B467;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ─── FOOTER ─── */
+.dm-footer {
+  text-align: center;
+  padding: 44px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dm-footer-quote {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 18px;
+  color: #D8B467;
+  margin: 0 0 12px 0;
+}
+
+.dm-footer-tagline {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #CFA854;
+  margin: 0 0 10px 0;
+}
+
+.dm-footer-info {
+  font-size: 13.5px;
+  color: #D8B467;
+  margin: 0 0 12px 0;
+}
+
+.dm-footer-fine {
+  font-size: 11px;
+  color: #A3967F;
+  line-height: 1.5;
+  max-width: 320px;
+  margin: 0;
+}
+
+/* ─── EMPTY & LOADING ─── */
+.dm-loading, .dm-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #D8B467;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-style: italic;
+}
+
+.dm-spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(216, 180, 103, 0.2);
+  border-top-color: #D8B467;
+  border-radius: 50%;
+  animation: dm-spin 0.8s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes dm-spin {
+  to { transform: rotate(360deg); }
+}
+

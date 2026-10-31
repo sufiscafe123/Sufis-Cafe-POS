@@ -4,6 +4,7 @@ import { currentSession } from '@/server/pageAuth';
 import '@/styles/index.css';
 import '@/styles/customer.css';
 import '@/styles/customer-theme.css';
+import '@/styles/digital-menu.css';
 
 // Every page depends on the signed-in session
 export const dynamic = 'force-dynamic';

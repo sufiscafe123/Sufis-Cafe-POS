@@ -104,6 +104,26 @@ export default function CustomerLogin() {
           </div>
           <div className="sl-card" style={{ textAlign: 'center' }}>
             <ScanLine size={44} strokeWidth={1.5} color="#2D6144" aria-hidden="true" />
+            <div style={{ marginTop: 12, marginBottom: 12 }}>
+              <Link
+                href="/menu"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  padding: '10px 22px',
+                  background: '#07241A',
+                  color: '#D8B467',
+                  border: '1.5px solid #C8A251',
+                  borderRadius: 9999,
+                  fontWeight: 700,
+                  fontSize: 13.5,
+                  textDecoration: 'none'
+                }}
+              >
+                📖 View Live Digital Menu
+              </Link>
+            </div>
             <h2 className="sl-heading">Scan your table&apos;s QR code</h2>
             <p className="sl-sub">
               Please scan the QR code placed on your table to view the menu and order. Ask a staff member if you can&apos;t find it.
@@ -175,6 +195,19 @@ export default function CustomerLogin() {
           </button>
 
           <div className="sl-perk"><Gift size={16} strokeWidth={1.8} aria-hidden="true" /> Earn a free stamp with every visit</div>
+          <div style={{ textAlign: 'center', marginTop: 12 }}>
+            <Link
+              href="/menu"
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: '#2D6144',
+                textDecoration: 'underline'
+              }}
+            >
+              Or just explore our Digital Menu →
+            </Link>
+          </div>
         </form>
 
         <div className="sl-fine">By continuing, you agree to our <Link href="/customer/terms">Terms</Link> &amp; <Link href="/customer/privacy">Privacy Policy</Link>.</div>
